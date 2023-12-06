@@ -2,11 +2,14 @@
 import { StyleSheet,StatusBar,View, SafeAreaView,ActivityIndicator } from 'react-native';
 import Header from './components/Header';
 import ListItem from './components/ListItem';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Api from './Api';
 import { cores } from './globalStyle';
 import ModalNewItem from './components/ModalNewItem';
 import ModalDelete from './components/ModalDelete';
+import BottomSheet, { BottomSheetTextInput }  from '@gorhom/bottom-sheet';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import DeleteBottomSheet from './components/DeleteBottomSheet';
 
 export default function App() {
   const [items,setItems] = useState([]);
@@ -15,6 +18,7 @@ export default function App() {
   const [modalVisible,setModalVisible] = useState(false);
   const [modalDeleteVisible,setModalDeleteVisible] = useState(false);
   const [idDelete,setIdDelete] = useState(null);
+  const bottomSheetRef = useRef(null);
 
 useEffect(()=>{
    const getItems = async () =>{
@@ -28,8 +32,9 @@ useEffect(()=>{
 
 
 const onOpenModalNewItem = async = () => {
-    setNewItemText('');
-    setModalVisible(true);
+    // setNewItemText('');
+    // setModalVisible(true);
+    bottomSheetRef.current.expand();
 }
 
 const onAddItemPress = async (itemText) => {
@@ -41,7 +46,7 @@ const onAddItemPress = async (itemText) => {
     setItems(listItems);
     setModalVisible(false);
    
-
+    
 }
 
 const onDeleteItem = async (id) => {
@@ -73,7 +78,7 @@ const onCheckItem = async (id) => {
 };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
         <StatusBar animated={true} backgroundColor={cores.azul} barStyle="light-content"/>
         <Header onAddButtonPress={onOpenModalNewItem}/>
         <View style={styles.body}>
@@ -81,7 +86,8 @@ const onCheckItem = async (id) => {
         </View>
         <ModalNewItem onAddItemPress={onAddItemPress} modalVisible={modalVisible} setModalVisible={setModalVisible} newItemText={newItemText} setNewItemText={setNewItemText}/>
         <ModalDelete id={idDelete} modalVisible={modalDeleteVisible} setModalVisible={setModalDeleteVisible} onDelete={onDeleteItemAction}/>
-    </SafeAreaView>
+        <DeleteBottomSheet ref={bottomSheetRef}/>
+    </GestureHandlerRootView>
   );
 }
 
