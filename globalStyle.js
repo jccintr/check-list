@@ -1,4 +1,5 @@
 export const cores = {
+    
     vermelho: '#EB0303',
     amarelo: '#FFF200',
     fundo: '#c1c1c1',
@@ -8,4 +9,5 @@ export const cores = {
     branco: '#fff',
     dourado: '#FDCC0D',
     azul: '#0C4767',
+    primary: '#0C4767',
  };

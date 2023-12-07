@@ -1,13 +1,13 @@
 import { StyleSheet, Text, View,TouchableOpacity } from 'react-native'
 import React from 'react'
 import { cores } from '../globalStyle'
-import { FontAwesome,AntDesign } from '@expo/vector-icons'; 
+import { FontAwesome } from '@expo/vector-icons'; 
 
 
 const Header = ({onAddButtonPress}) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.titleText}>My Check List</Text>
+      <Text style={styles.titleText}>MyList</Text>
       <TouchableOpacity onPress={onAddButtonPress}>
          <FontAwesome name="plus" size={24} color="white" />
       </TouchableOpacity>

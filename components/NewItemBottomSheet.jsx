@@ -4,6 +4,7 @@ import BottomSheet  from '@gorhom/bottom-sheet';
 import { BottomSheetBackdrop, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import Botao from '../components/reusable/Botao';
 import HeightSpacer from '../components/reusable/HeightSpacer';
+import { cores } from '../globalStyle';
 
 const NewItemBottomSheet = forwardRef((props,ref) => {
     const snapPoints = useMemo(() => ['30%'], []);
@@ -12,26 +13,27 @@ const NewItemBottomSheet = forwardRef((props,ref) => {
     const renderBackdrop = useCallback((props) => <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props}/>, []);
 
   return (
+    
     <BottomSheet
         ref={ref}
         index={-1}
         snapPoints={snapPoints}
-        //onChange={handleSheetChanges}
         backdropComponent={renderBackdrop}
-        //backgroundStyle={{backgroundColor:'#1d0f4e'}}
-        //handleIndicatorStyle={{backgroundColor: '#fff'}}
+        handleIndicatorStyle={{backgroundColor: cores.azul}}
         enablePanDownToClose={true}
-        
+        keyboardBehavior="interactive"
       >
-      <View style={{flex:1, alignItems:'center'}}>
-           <Text style={{fontSize:20, color: '#000'}}>New item</Text>
-           <HeightSpacer h={20} />
-           <Botao onPress={()=>{}} text={'DELETE'} textSize={18} textColor={'#FFF'} width={'90%'} backgroundColor={'#F00'} borderWidth={0} borderColor={'#F00'} borderRadius={10} isLoading={false}/>
-           <HeightSpacer h={20} />
-           <Botao onPress={()=>{}} text={'CANCEL'} textSize={18} textColor={'#F00'} width={'90%'} backgroundColor={'#FFF'} borderWidth={1} borderColor={'#F00'} borderRadius={10} isLoading={false}/>
-           <HeightSpacer h={20} />
-
-        </View>
+          <View style={{flex:1, alignItems:'center'}}>
+              <Text style={{fontSize:20, color: '#000'}}>New Item</Text>
+              <HeightSpacer h={20} />
+              <BottomSheetTextInput 
+                  style={styles.input}
+                  value={props.newItemText}
+                  onChangeText={t=>props.setNewItemText(t)}
+                />
+              <HeightSpacer h={10} />
+              <Botao onPress={()=>props.onAddItemPress(props.newItemText)} text={'SAVE'} textSize={18} textColor={'#FFF'} width={'90%'} backgroundColor={cores.azul} borderWidth={0} borderColor={'#F00'} borderRadius={10} isLoading={false}/>
+          </View>
 
       </BottomSheet>
   )
@@ -40,6 +42,18 @@ const NewItemBottomSheet = forwardRef((props,ref) => {
 export default NewItemBottomSheet
 
 const styles = StyleSheet.create({
-
+  input: {
+    marginTop:8,
+    width: '90%',
+    marginHorizontal:16,
+    marginBottom:10,
+    borderRadius:10,
+    fontSize:16,
+    lineHeight:20,
+    padding:8,
+    color: '#000',
+    backgroundColor: 'rgba(201,201,201,0.50)',
+    
+  }
 
 })

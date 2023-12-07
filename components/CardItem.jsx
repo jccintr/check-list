@@ -4,15 +4,15 @@ import { FontAwesome,Fontisto } from '@expo/vector-icons';
 import { cores } from '../globalStyle';
 
 const CardItem = ({item,onDeleteItem,onCheckItem}) => {
-    const screenWidth = Dimensions.get('window').width;
+    
   return (
     <View style={styles.container}>
         <TouchableOpacity onPress={()=>onCheckItem(item.id)}>
-          {item.checked?<Fontisto name="checkbox-active" size={20} color="black" />:<Fontisto name="checkbox-passive" size={20} color="black" />}
+            <Fontisto name={item.checked?'checkbox-active':"checkbox-passive"} size={20} color="black" />
         </TouchableOpacity>
         <Text style={item.checked?styles.itemChecked:styles.item}>{item.item}</Text>
         <TouchableOpacity onPress={()=>onDeleteItem(item.id)}>
-           <FontAwesome name="trash-o" size={20} color={cores.vermelho} />
+            <FontAwesome name="trash-o" size={20} color={cores.vermelho} />
         </TouchableOpacity>
         
     </View>
@@ -24,7 +24,6 @@ export default CardItem
 const styles = StyleSheet.create({
 container:{
    width: '100%',
-  
    maxWidth: Dimensions.get('window').width,
    backgroundColor: cores.cinzaClaro,
    borderRadius: 10,
@@ -35,11 +34,9 @@ container:{
    paddingHorizontal: 10,
    marginBottom: 2,
    marginTop: 2,
- 
-},
+ },
 item:{
     width: '80%',
-   
 },
 itemChecked:{
     width: '80%',

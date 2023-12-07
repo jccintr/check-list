@@ -1,26 +1,22 @@
 
-import { StyleSheet,StatusBar,View, SafeAreaView,ActivityIndicator } from 'react-native';
+import { StyleSheet,StatusBar,ActivityIndicator,FlatList } from 'react-native';
 import Header from './components/Header';
-import ListItem from './components/ListItem';
 import { useEffect, useState, useRef } from 'react';
 import Api from './Api';
 import { cores } from './globalStyle';
-import ModalNewItem from './components/ModalNewItem';
-import ModalDelete from './components/ModalDelete';
-import BottomSheet, { BottomSheetTextInput }  from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import DeleteBottomSheet from './components/DeleteBottomSheet';
 import NewItemBottomSheet from './components/NewItemBottomSheet';
+import EmptyList from './components/EmptyList';
+import CardItem from './components/CardItem';
 
 export default function App() {
   const [items,setItems] = useState([]);
   const [newItemText,setNewItemText] = useState('');
   const [isLoading,setIsLoading] = useState(false);
-  const [modalVisible,setModalVisible] = useState(false);
-  const [modalDeleteVisible,setModalDeleteVisible] = useState(false);
   const [idDelete,setIdDelete] = useState(null);
-  const bottomSheetRef = useRef(null);
-  const NewItemBottomSheetRef = useRef(null);
+  const deleteBottomSheetRef = useRef(null);
+  const newItemBottomSheetRef = useRef(null);
 
 useEffect(()=>{
    const getItems = async () =>{
@@ -34,33 +30,34 @@ useEffect(()=>{
 
 
 const onOpenModalNewItem = async = () => {
-    // setNewItemText('');
-    // setModalVisible(true);
-    NewItemBottomSheetRef.current.expand();
+    setNewItemText('');
+    newItemBottomSheetRef.current.expand();
 }
 
 const onCancelDelete = () => {
-  bottomSheetRef.current.close();
+  deleteBottomSheetRef.current.close();
 }
 
 
 
 const onAddItemPress = async (itemText) => {
  
-    const id = items.length ? items[items.length - 1].id + 1 : 1;
-    const myNewItem = { id, checked: false, item: itemText };
-    const listItems = [...items, myNewItem];
-    let response = Api.addItem(myNewItem);
-    setItems(listItems);
-    setModalVisible(false);
-   
+    if(itemText.trim().length>0){
+      const id = items.length ? items[items.length - 1].id + 1 : 1;
+      const myNewItem = { id, checked: false, item: itemText };
+      const listItems = [...items, myNewItem];
+      let response = Api.addItem(myNewItem);
+      setItems(listItems);
+      newItemBottomSheetRef.current.close();
+    }
+    
     
 }
 
 const onDeleteItem = async (id) => {
 
   setIdDelete(id);
-  bottomSheetRef.current.expand();
+  deleteBottomSheetRef.current.expand();
  
 }
 
@@ -69,13 +66,13 @@ const onDeleteItemAction = async (id) => {
   const listItems = items.filter((item) => item.id !== id);
   setItems(listItems);
   let response = Api.deleteItem(id);
-  bottomSheetRef.current.close();
+  deleteBottomSheetRef.current.close();
  
 }
 
 
-
 const onCheckItem = async (id) => {
+
   const listItems = items.map((item) =>
     item.id === id ? { ...item, checked: !item.checked } : item
   );
@@ -89,13 +86,18 @@ const onCheckItem = async (id) => {
     <GestureHandlerRootView style={styles.container}>
         <StatusBar animated={true} backgroundColor={cores.azul} barStyle="light-content"/>
         <Header onAddButtonPress={onOpenModalNewItem}/>
-        <View style={styles.body}>
-          {isLoading?<ActivityIndicator style={styles.loading} size="large" color={cores.azul}/>:<ListItem items={items} onDeleteItem={onDeleteItem} onCheckItem={onCheckItem}/>}
-        </View>
-        <ModalNewItem onAddItemPress={onAddItemPress} modalVisible={modalVisible} setModalVisible={setModalVisible} newItemText={newItemText} setNewItemText={setNewItemText}/>
-        {/*<ModalDelete id={idDelete} modalVisible={modalDeleteVisible} setModalVisible={setModalDeleteVisible} onDelete={onDeleteItemAction}/>*/}
-        <DeleteBottomSheet id={idDelete} ref={bottomSheetRef} onDelete={onDeleteItemAction}  onCancel={onCancelDelete}/>
-        <NewItemBottomSheet ref={NewItemBottomSheetRef} />
+        {isLoading&&<ActivityIndicator style={styles.loading} size="large" color={cores.azul}/>}
+        {!isLoading&&<FlatList 
+              style={styles.flatlist}
+              showsVerticalScrollIndicator={false}
+              data={items}
+              ListEmptyComponent={<EmptyList/>}
+              keyExtractor={(item)=> item.id}
+              contentContainerStyle={items.length===0?{flexGrow:1,alignItems:'center',justifyContent:'center'}:''}
+              renderItem={({item})=><CardItem item={item} onDeleteItem={onDeleteItem} onCheckItem={onCheckItem}/>}
+            />}    
+        <DeleteBottomSheet id={idDelete} ref={deleteBottomSheetRef} onDelete={onDeleteItemAction}  onCancel={onCancelDelete}/>
+        <NewItemBottomSheet ref={newItemBottomSheetRef} onAddItemPress={onAddItemPress} newItemText={newItemText} setNewItemText={setNewItemText} />
     </GestureHandlerRootView>
   );
 }
@@ -111,6 +113,9 @@ const styles = StyleSheet.create({
   body:{
     flex:1,
     marginHorizontal: 5,
+  },
+  flatlist: {
+     width: '100%',
   },
   loading:{
     position: 'absolute',
