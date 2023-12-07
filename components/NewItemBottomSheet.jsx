@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React, {useMemo,forwardRef,useCallback} from 'react';
 import BottomSheet  from '@gorhom/bottom-sheet';
-import { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
+import { BottomSheetBackdrop, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import Botao from '../components/reusable/Botao';
 import HeightSpacer from '../components/reusable/HeightSpacer';
 
-const DeleteBottomSheet = forwardRef((props,ref) => {
+const NewItemBottomSheet = forwardRef((props,ref) => {
     const snapPoints = useMemo(() => ['30%'], []);
     
 
@@ -24,11 +24,11 @@ const DeleteBottomSheet = forwardRef((props,ref) => {
         
       >
       <View style={{flex:1, alignItems:'center'}}>
-           <Text style={{fontSize:20, color: '#000'}}>Delete this item ?</Text>
+           <Text style={{fontSize:20, color: '#000'}}>New item</Text>
            <HeightSpacer h={20} />
-           <Botao onPress={()=>props.onDelete(props.id)} text={'DELETE'} textSize={18} textColor={'#FFF'} width={'90%'} backgroundColor={'#F00'} borderWidth={0} borderColor={'#F00'} borderRadius={10} isLoading={false}/>
+           <Botao onPress={()=>{}} text={'DELETE'} textSize={18} textColor={'#FFF'} width={'90%'} backgroundColor={'#F00'} borderWidth={0} borderColor={'#F00'} borderRadius={10} isLoading={false}/>
            <HeightSpacer h={20} />
-           <Botao onPress={props.onCancel} text={'CANCEL'} textSize={18} textColor={'#F00'} width={'90%'} backgroundColor={'#FFF'} borderWidth={1} borderColor={'#F00'} borderRadius={10} isLoading={false}/>
+           <Botao onPress={()=>{}} text={'CANCEL'} textSize={18} textColor={'#F00'} width={'90%'} backgroundColor={'#FFF'} borderWidth={1} borderColor={'#F00'} borderRadius={10} isLoading={false}/>
            <HeightSpacer h={20} />
 
         </View>
@@ -37,7 +37,7 @@ const DeleteBottomSheet = forwardRef((props,ref) => {
   )
 });
 
-export default DeleteBottomSheet
+export default NewItemBottomSheet
 
 const styles = StyleSheet.create({
 
